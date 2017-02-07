@@ -21,13 +21,23 @@
 # You can find a table with all of these values here:
 # http://bitmote.com/index.php?post/2012/11/19/Using-ANSI-Color-Codes-to-Colorize-Your-Bash-Prompt-on-Linux#256%20(8-bit)%20Colors
 
+COLORCODE="\033[0m"
+COLOREND="\033[0;00m"
 
 # color and print a line
 print_line() {
-  echo $1
+  echo -e "${COLORCODE}$1${COLOREND}" 
 }
 
 
+
+# expects red green blue values (from 0 to 5 for each of the 3 colors) and returns
+rgb_to_8bit() {
+  local code=$((16 + 36 * $1 + 6 * $2 + $3))
+  COLORCODE="\033[38;5;${code}m"
+}
+
+rgb_to_8bit 0 5 0
 print_line "this is an example line this is an example line this is an example line "
 print_line "this is an example line this is an example line this is an example line "
 print_line "this is an example line this is an example line this is an example line "
