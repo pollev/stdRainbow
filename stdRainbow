@@ -24,11 +24,51 @@
 COLORCODE="\033[0m"
 COLOREND="\033[0;00m"
 
+FREQ=0.3
+R=0
+G=0
+B=0
+
 # color and print a line
-print_line() {
-  echo -e "${COLORCODE}$1${COLOREND}" 
+print_input() {
+  local input=$1
+  for (( i=0; i<${#input}; i++ )); do
+    #Update the rgb values
+    sin
+    #Use RGB values to update color code
+    rgb_to_8bit $R $G $B
+    #Print colored char
+    printf "${COLORCODE}${input:$i:1}${COLOREND}"
+  done
 }
 
+
+ITER=0
+# Advance the sinus wave (radians)
+sin ()
+{
+  #Radians value for this iteration
+  local radR="$(echo "$ITER*$FREQ + 0" | bc)"
+  local radG="$(echo "$ITER*$FREQ + 2" | bc)"
+  local radB="$(echo "$ITER*$FREQ + 4" | bc)"
+  #Grab next point on SIN wave
+  local sinR="$(echo "scale=5;s($radR)" | bc -l)" #degrees: echo "scale=5;s($1*0.017453293)" | bc -l
+  local sinG="$(echo "scale=5;s($radG)" | bc -l)"
+  local sinB="$(echo "scale=5;s($radB)" | bc -l)"
+  #Scale it to our little 0-5 interval
+  local sinR="$(printf %.$2f $(echo "$sinR * (5/2) + 5/2" | bc -l))"
+  local sinG="$(printf %.$2f $(echo "$sinG * (5/2) + 5/2" | bc -l))"
+  local sinB="$(printf %.$2f $(echo "$sinB * (5/2) + 5/2" | bc -l))"
+  
+  
+  #Update global values
+  R=$sinR
+  G=$sinG
+  B=$sinB
+
+  #Update iteration
+  ITER=$(($ITER + 1))
+}
 
 
 # expects red green blue values (from 0 to 5 for each of the 3 colors) and returns
@@ -37,9 +77,15 @@ rgb_to_8bit() {
   COLORCODE="\033[38;5;${code}m"
 }
 
-rgb_to_8bit 0 5 0
-print_line "this is an example line this is an example line this is an example line "
-print_line "this is an example line this is an example line this is an example line "
-print_line "this is an example line this is an example line this is an example line "
-print_line "this is an example line this is an example line this is an example line "
-print_line "this is an example line this is an example line this is an example line "
+
+# while loop
+while IFS= read -r -n1 char
+do
+	print_input "$char"
+  if [ "$char" = "" ] 
+  then
+    echo 
+  fi
+done
+
+
