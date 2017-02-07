@@ -24,7 +24,8 @@
 COLORCODE="\033[0m"
 COLOREND="\033[0;00m"
 
-FREQ=0.3
+FREQ=0.05
+LINEOFFSET=1
 R=0
 G=0
 B=0
@@ -48,9 +49,9 @@ ITER=0
 sin ()
 {
   #Radians value for this iteration
-  local radR="$(echo "$ITER*$FREQ + 0" | bc)"
-  local radG="$(echo "$ITER*$FREQ + 2" | bc)"
-  local radB="$(echo "$ITER*$FREQ + 4" | bc)"
+  local radR="$(echo "$ITER*$FREQ + 0 + $LINEOFFSET/3" | bc)"
+  local radG="$(echo "$ITER*$FREQ + 2 + $LINEOFFSET/3" | bc)"
+  local radB="$(echo "$ITER*$FREQ + 4 + $LINEOFFSET/3" | bc)"
   #Grab next point on SIN wave
   local sinR="$(echo "scale=5;s($radR)" | bc -l)" #degrees: echo "scale=5;s($1*0.017453293)" | bc -l
   local sinG="$(echo "scale=5;s($radG)" | bc -l)"
@@ -84,7 +85,12 @@ do
 	print_input "$char"
   if [ "$char" = "" ] 
   then
+    #Print newline
     echo 
+    #Reset ITER
+    ITER=0
+    #Increase line offset
+    LINEOFFSET=$(($LINEOFFSET+2))
   fi
 done
 
