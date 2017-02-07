@@ -1,0 +1,35 @@
+#!/bin/bash
+
+
+# From: http://stackoverflow.com/questions/15682537/ansi-color-specific-rgb-sequence-bash#15712766
+#
+# This does exist, but instead of the 16777216 (256^3) colors that the OP was looking for, there are 216 (6^3) equally distributed colors,
+# in a larger set of 256 colors. Example:
+#
+# echo -e "\033[38;5;208mpeach\033[0;00m"
+#
+# This will output a pleasing sort of peach colored text.
+#
+# Taking apart this command: \033[38;5;208m
+#
+# The \033 is the escape code. The [38; directs command to the foreground. If you want to change the background color instead, 
+# use [48; instead. The 5; is just a piece of the sequence that changes color. And the most important part, 208m, selects the actual color.
+#
+# There are 3 sets of colors that can be found in the 256 color sequence for this escape. The first set is the basic "candy" color set, 
+# or values 0-15. Then there is a cube of distributed colors, from 16-231. Lastly there is a detailed grayscale set from 232-255.
+#
+# You can find a table with all of these values here:
+# http://bitmote.com/index.php?post/2012/11/19/Using-ANSI-Color-Codes-to-Colorize-Your-Bash-Prompt-on-Linux#256%20(8-bit)%20Colors
+
+
+# color and print a line
+print_line() {
+  echo $1
+}
+
+
+print_line "this is an example line this is an example line this is an example line "
+print_line "this is an example line this is an example line this is an example line "
+print_line "this is an example line this is an example line this is an example line "
+print_line "this is an example line this is an example line this is an example line "
+print_line "this is an example line this is an example line this is an example line "
